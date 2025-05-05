@@ -80,5 +80,10 @@ namespace SERVICES_HELPER
                 return;
             }
         }
+
+        private void btnBuild_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

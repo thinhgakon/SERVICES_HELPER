@@ -30,8 +30,8 @@
         {
             dgvServices = new DataGridView();
             btnUpdate = new Button();
-            button2 = new Button();
-            button3 = new Button();
+            btnBuild = new Button();
+            btnAdd = new Button();
             label1 = new Label();
             txtGitHubUrl = new TextBox();
             label2 = new Label();
@@ -60,23 +60,24 @@
             btnUpdate.UseVisualStyleBackColor = true;
             btnUpdate.Click += btnUpdate_Click;
             // 
-            // button2
+            // btnBuild
             // 
-            button2.Location = new Point(647, 67);
-            button2.Name = "button2";
-            button2.Size = new Size(131, 33);
-            button2.TabIndex = 2;
-            button2.Text = "Build";
-            button2.UseVisualStyleBackColor = true;
+            btnBuild.Location = new Point(647, 67);
+            btnBuild.Name = "btnBuild";
+            btnBuild.Size = new Size(131, 33);
+            btnBuild.TabIndex = 2;
+            btnBuild.Text = "Build";
+            btnBuild.UseVisualStyleBackColor = true;
+            btnBuild.Click += btnBuild_Click;
             // 
-            // button3
+            // btnAdd
             // 
-            button3.Location = new Point(647, 121);
-            button3.Name = "button3";
-            button3.Size = new Size(131, 33);
-            button3.TabIndex = 3;
-            button3.Text = "Add";
-            button3.UseVisualStyleBackColor = true;
+            btnAdd.Location = new Point(647, 121);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(131, 33);
+            btnAdd.TabIndex = 3;
+            btnAdd.Text = "Add";
+            btnAdd.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -121,8 +122,8 @@
             Controls.Add(label2);
             Controls.Add(txtGitHubUrl);
             Controls.Add(label1);
-            Controls.Add(button3);
-            Controls.Add(button2);
+            Controls.Add(btnAdd);
+            Controls.Add(btnBuild);
             Controls.Add(btnUpdate);
             Controls.Add(dgvServices);
             Name = "ServicesHelperForm";
@@ -138,8 +139,8 @@
 
         private DataGridView dgvServices;
         private Button btnUpdate;
-        private Button button2;
-        private Button button3;
+        private Button btnBuild;
+        private Button btnAdd;
         private Label label1;
         private TextBox txtGitHubUrl;
         private Label label2;
