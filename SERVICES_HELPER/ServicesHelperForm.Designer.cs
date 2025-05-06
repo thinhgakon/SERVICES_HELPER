@@ -29,13 +29,17 @@
         private void InitializeComponent()
         {
             dgvServices = new DataGridView();
-            btnUpdate = new Button();
-            btnBuild = new Button();
-            btnAdd = new Button();
+            btnBuildProject = new Button();
+            btnAddService = new Button();
             label1 = new Label();
             txtGitHubUrl = new TextBox();
             label2 = new Label();
+            folderBrowserDialog1 = new FolderBrowserDialog();
+            btnBrowse = new Button();
             txtDirectory = new TextBox();
+            btnRemoveService = new Button();
+            btnUpdateGitHub = new Button();
+            btnCloneGitHub = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
             SuspendLayout();
             // 
@@ -50,34 +54,25 @@
             dgvServices.Size = new Size(609, 424);
             dgvServices.TabIndex = 0;
             // 
-            // btnUpdate
+            // btnBuildProject
             // 
-            btnUpdate.Location = new Point(647, 14);
-            btnUpdate.Name = "btnUpdate";
-            btnUpdate.Size = new Size(131, 33);
-            btnUpdate.TabIndex = 1;
-            btnUpdate.Text = "Update";
-            btnUpdate.UseVisualStyleBackColor = true;
-            btnUpdate.Click += btnUpdate_Click;
+            btnBuildProject.Location = new Point(647, 119);
+            btnBuildProject.Name = "btnBuildProject";
+            btnBuildProject.Size = new Size(131, 33);
+            btnBuildProject.TabIndex = 2;
+            btnBuildProject.Text = "Build Project";
+            btnBuildProject.UseVisualStyleBackColor = true;
+            btnBuildProject.Click += btnBuildProject_Click;
             // 
-            // btnBuild
+            // btnAddService
             // 
-            btnBuild.Location = new Point(647, 67);
-            btnBuild.Name = "btnBuild";
-            btnBuild.Size = new Size(131, 33);
-            btnBuild.TabIndex = 2;
-            btnBuild.Text = "Build";
-            btnBuild.UseVisualStyleBackColor = true;
-            btnBuild.Click += btnBuild_Click;
-            // 
-            // btnAdd
-            // 
-            btnAdd.Location = new Point(647, 121);
-            btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(131, 33);
-            btnAdd.TabIndex = 3;
-            btnAdd.Text = "Add";
-            btnAdd.UseVisualStyleBackColor = true;
+            btnAddService.Location = new Point(647, 173);
+            btnAddService.Name = "btnAddService";
+            btnAddService.Size = new Size(131, 33);
+            btnAddService.TabIndex = 3;
+            btnAddService.Text = "Add Service";
+            btnAddService.UseVisualStyleBackColor = true;
+            btnAddService.Click += btnAddService_Click;
             // 
             // label1
             // 
@@ -106,25 +101,67 @@
             label2.TabIndex = 7;
             label2.Text = "Directory:";
             // 
+            // btnBrowse
+            // 
+            btnBrowse.Location = new Point(740, 446);
+            btnBrowse.Name = "btnBrowse";
+            btnBrowse.Size = new Size(38, 25);
+            btnBrowse.TabIndex = 8;
+            btnBrowse.Text = "...";
+            btnBrowse.UseVisualStyleBackColor = true;
+            btnBrowse.Click += btnBrowse_Click;
+            // 
             // txtDirectory
             // 
-            txtDirectory.Location = new Point(507, 449);
+            txtDirectory.Location = new Point(507, 447);
             txtDirectory.Name = "txtDirectory";
-            txtDirectory.Size = new Size(259, 23);
-            txtDirectory.TabIndex = 8;
+            txtDirectory.Size = new Size(227, 23);
+            txtDirectory.TabIndex = 9;
+            // 
+            // btnRemoveService
+            // 
+            btnRemoveService.Location = new Point(647, 227);
+            btnRemoveService.Name = "btnRemoveService";
+            btnRemoveService.Size = new Size(131, 33);
+            btnRemoveService.TabIndex = 10;
+            btnRemoveService.Text = "Remove Service";
+            btnRemoveService.UseVisualStyleBackColor = true;
+            // 
+            // btnUpdateGitHub
+            // 
+            btnUpdateGitHub.Location = new Point(647, 66);
+            btnUpdateGitHub.Name = "btnUpdateGitHub";
+            btnUpdateGitHub.Size = new Size(131, 33);
+            btnUpdateGitHub.TabIndex = 1;
+            btnUpdateGitHub.Text = "Update GitHub";
+            btnUpdateGitHub.UseVisualStyleBackColor = true;
+            btnUpdateGitHub.Click += btnUpdateGitHub_Click;
+            // 
+            // btnCloneGitHub
+            // 
+            btnCloneGitHub.Location = new Point(647, 14);
+            btnCloneGitHub.Name = "btnCloneGitHub";
+            btnCloneGitHub.Size = new Size(131, 33);
+            btnCloneGitHub.TabIndex = 11;
+            btnCloneGitHub.Text = "Clone GitHub";
+            btnCloneGitHub.UseVisualStyleBackColor = true;
+            btnCloneGitHub.Click += btnCloneGitHub_Click;
             // 
             // ServicesHelperForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(796, 477);
+            Controls.Add(btnCloneGitHub);
+            Controls.Add(btnRemoveService);
             Controls.Add(txtDirectory);
+            Controls.Add(btnBrowse);
             Controls.Add(label2);
             Controls.Add(txtGitHubUrl);
             Controls.Add(label1);
-            Controls.Add(btnAdd);
-            Controls.Add(btnBuild);
-            Controls.Add(btnUpdate);
+            Controls.Add(btnAddService);
+            Controls.Add(btnBuildProject);
+            Controls.Add(btnUpdateGitHub);
             Controls.Add(dgvServices);
             Name = "ServicesHelperForm";
             StartPosition = FormStartPosition.CenterScreen;
@@ -138,12 +175,16 @@
         #endregion
 
         private DataGridView dgvServices;
-        private Button btnUpdate;
-        private Button btnBuild;
-        private Button btnAdd;
+        private Button btnBuildProject;
+        private Button btnAddService;
         private Label label1;
         private TextBox txtGitHubUrl;
         private Label label2;
+        private FolderBrowserDialog folderBrowserDialog1;
+        private Button btnBrowse;
         private TextBox txtDirectory;
+        private Button btnRemoveService;
+        private Button btnUpdateGitHub;
+        private Button btnCloneGitHub;
     }
 }
