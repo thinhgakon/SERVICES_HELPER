@@ -117,6 +117,7 @@
             // 
             // cbbStartupType
             // 
+            cbbStartupType.DropDownStyle = ComboBoxStyle.DropDownList;
             cbbStartupType.FormattingEnabled = true;
             cbbStartupType.Items.AddRange(new object[] { "Automatic", "Manual", "Disabled" });
             cbbStartupType.Location = new Point(105, 153);
@@ -218,6 +219,7 @@
             // 
             // cbbSubsequentFailures
             // 
+            cbbSubsequentFailures.DropDownStyle = ComboBoxStyle.DropDownList;
             cbbSubsequentFailures.FormattingEnabled = true;
             cbbSubsequentFailures.Items.AddRange(new object[] { "Take No Action", "Restart the Service", "Restart the Computer" });
             cbbSubsequentFailures.Location = new Point(172, 91);
@@ -227,6 +229,7 @@
             // 
             // cbbSecondFailure
             // 
+            cbbSecondFailure.DropDownStyle = ComboBoxStyle.DropDownList;
             cbbSecondFailure.FormattingEnabled = true;
             cbbSecondFailure.Items.AddRange(new object[] { "Take No Action", "Restart the Service", "Restart the Computer" });
             cbbSecondFailure.Location = new Point(172, 55);
@@ -236,6 +239,7 @@
             // 
             // cbbFirstFailure
             // 
+            cbbFirstFailure.DropDownStyle = ComboBoxStyle.DropDownList;
             cbbFirstFailure.FormattingEnabled = true;
             cbbFirstFailure.Items.AddRange(new object[] { "Take No Action", "Restart the Service", "Restart the Computer" });
             cbbFirstFailure.Location = new Point(172, 21);
@@ -296,6 +300,7 @@
             btnOK.TabIndex = 12;
             btnOK.Text = "OK";
             btnOK.UseVisualStyleBackColor = true;
+            btnOK.Click += btnOK_Click;
             // 
             // btnCancel
             // 
@@ -305,6 +310,7 @@
             btnCancel.TabIndex = 13;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnApply
             // 
@@ -325,6 +331,8 @@
             Controls.Add(btnCancel);
             Controls.Add(btnOK);
             Controls.Add(tabControl1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "ServicePropertiesForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Properties";

@@ -46,6 +46,8 @@
             btnRemoveService = new Button();
             btnUpdateGitHub = new Button();
             btnCloneGitHub = new Button();
+            txtSearchKey = new TextBox();
+            btnSearch = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
             contextMenuService.SuspendLayout();
             SuspendLayout();
@@ -56,17 +58,17 @@
             dgvServices.AllowUserToDeleteRows = false;
             dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvServices.ContextMenuStrip = contextMenuService;
-            dgvServices.Location = new Point(20, 14);
+            dgvServices.Location = new Point(20, 45);
             dgvServices.Name = "dgvServices";
             dgvServices.ReadOnly = true;
-            dgvServices.Size = new Size(609, 424);
+            dgvServices.Size = new Size(609, 393);
             dgvServices.TabIndex = 0;
             // 
             // contextMenuService
             // 
             contextMenuService.Items.AddRange(new ToolStripItem[] { menuStart, menuStop, menuRestart, menuProperties });
             contextMenuService.Name = "contextMenuService";
-            contextMenuService.Size = new Size(181, 114);
+            contextMenuService.Size = new Size(128, 92);
             // 
             // menuStart
             // 
@@ -92,7 +94,7 @@
             // menuProperties
             // 
             menuProperties.Name = "menuProperties";
-            menuProperties.Size = new Size(180, 22);
+            menuProperties.Size = new Size(127, 22);
             menuProperties.Text = "Properties";
             menuProperties.Click += menuProperties_Click;
             // 
@@ -168,6 +170,7 @@
             btnRemoveService.TabIndex = 10;
             btnRemoveService.Text = "Remove Service";
             btnRemoveService.UseVisualStyleBackColor = true;
+            btnRemoveService.Click += btnRemoveService_Click;
             // 
             // btnUpdateGitHub
             // 
@@ -189,11 +192,30 @@
             btnCloneGitHub.UseVisualStyleBackColor = true;
             btnCloneGitHub.Click += btnCloneGitHub_Click;
             // 
+            // txtSearchKey
+            // 
+            txtSearchKey.Location = new Point(20, 12);
+            txtSearchKey.Name = "txtSearchKey";
+            txtSearchKey.Size = new Size(531, 23);
+            txtSearchKey.TabIndex = 12;
+            // 
+            // btnSearch
+            // 
+            btnSearch.Location = new Point(557, 12);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(72, 23);
+            btnSearch.TabIndex = 13;
+            btnSearch.Text = "Search";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
+            // 
             // ServicesHelperForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(796, 477);
+            Controls.Add(btnSearch);
+            Controls.Add(txtSearchKey);
             Controls.Add(btnCloneGitHub);
             Controls.Add(btnRemoveService);
             Controls.Add(txtDirectory);
@@ -205,6 +227,8 @@
             Controls.Add(btnBuildProject);
             Controls.Add(btnUpdateGitHub);
             Controls.Add(dgvServices);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
             Name = "ServicesHelperForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "SERVICES HELPER";
@@ -234,5 +258,7 @@
         private ToolStripMenuItem menuStop;
         private ToolStripMenuItem menuRestart;
         private ToolStripMenuItem menuProperties;
+        private TextBox txtSearchKey;
+        private Button btnSearch;
     }
 }

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using DotNetEnv;
 using System.ServiceProcess;
+using System.Management;
 
 namespace SERVICES_HELPER
 {
@@ -16,7 +17,7 @@ namespace SERVICES_HELPER
         private void ServicesHelperForm_Load(object sender, EventArgs e)
         {
             this.dgvServices.DataSource = null;
-            this.dgvServices.DataSource = Func.GetServices();
+            this.dgvServices.DataSource = Func.GetServices(this.txtSearchKey.Text);
 
             if (dgvServices.Columns["Name"] != null)
             {
@@ -86,7 +87,7 @@ namespace SERVICES_HELPER
                     }
                 }
 
-                MessageBox.Show("Clone git repo thành công!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Clone git repo success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -135,7 +136,7 @@ namespace SERVICES_HELPER
                     }
                 }
 
-                MessageBox.Show("Cập nhật code thành công!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Cập nhật code success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -215,7 +216,7 @@ namespace SERVICES_HELPER
                     }
                 }
 
-                MessageBox.Show("Build project thành công!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Build project success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
@@ -270,14 +271,68 @@ namespace SERVICES_HELPER
                     string error = process.StandardError.ReadToEnd();
                     process.WaitForExit();
 
-                    if (!string.IsNullOrEmpty(error) || !output.Contains("successfully installed"))
+                    if (!string.IsNullOrEmpty(error))
                     {
                         MessageBox.Show($"Build service error: {error}\nOutput: {output}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
 
-                MessageBox.Show("Build service thành công!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Build service success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ServicesHelperForm_Load(sender, e);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
+
+        private void btnRemoveService_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.dgvServices.SelectedCells.Count == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn một service!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string serviceName = this.dgvServices.SelectedCells[0].OwningRow.Cells["Name"].Value.ToString();
+
+                var exeFile = string.Empty;
+                using (ManagementObject service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
+                {
+                    exeFile = service["PathName"]?.ToString() ?? "N/A";
+                }
+
+                string installUtilPath = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe";
+                ProcessStartInfo installService = new ProcessStartInfo
+                {
+                    FileName = installUtilPath,
+                    Arguments = $"-u \"{exeFile}\"",
+                    Verb = "runas",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using (Process process = new Process { StartInfo = installService })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        MessageBox.Show($"Remove service error: {error}\nOutput: {output}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+
+                MessageBox.Show("Remove service success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ServicesHelperForm_Load(sender, e);
             }
             catch (Exception ex)
@@ -416,6 +471,11 @@ namespace SERVICES_HELPER
             {
                 propertiesForm.ShowDialog();
             }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            ServicesHelperForm_Load(sender, e);
         }
     }
 }

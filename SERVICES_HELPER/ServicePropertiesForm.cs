@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Management;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace SERVICES_HELPER
@@ -34,43 +35,92 @@ namespace SERVICES_HELPER
                         cbbStartupType.SelectedItem = "Manual";
                     else if (startMode == "Disabled")
                         cbbStartupType.SelectedItem = "Disabled";
+                }
 
-                    ProcessStartInfo scQuery = new ProcessStartInfo
+                ProcessStartInfo scQuery = new ProcessStartInfo
+                {
+                    FileName = "sc",
+                    Arguments = $"qfailure \"{_serviceName}\"",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using (Process process = new Process { StartInfo = scQuery })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+
+                    ComboBox cbbFirstFailure = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbFirstFailure"] as ComboBox;
+                    ComboBox cbbSecondFailure = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbSecondFailure"] as ComboBox;
+                    ComboBox cbbSubsequentFailures = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbSubsequentFailures"] as ComboBox;
+                    TextBox txtResetFailCount = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["txtResetFailCount"] as TextBox;
+                    TextBox txtRestartServiceAfter = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["txtRestartServiceAfter"] as TextBox;
+
+                    Match resetMatch = Regex.Match(output, @"RESET_PERIOD \(in seconds\) : (\d+)");
+                    if (resetMatch.Success)
                     {
-                        FileName = "sc",
-                        Arguments = $"qfailure \"{_serviceName}\"",
-                        RedirectStandardOutput = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    };
-                    using (Process process = new Process { StartInfo = scQuery })
+                        txtResetFailCount.Text = resetMatch.Groups[1].Value;
+                    }
+                    else
                     {
-                        process.Start();
-                        string output = process.StandardOutput.ReadToEnd();
-                        process.WaitForExit();
+                        txtResetFailCount.Text = "0";
+                    }
 
-                        ComboBox cbbFirstFailure = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbFirstFailure"] as ComboBox;
-                        ComboBox cbbSecondFailure = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbSecondFailure"] as ComboBox;
-                        ComboBox cbbSubsequentFailures = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbSubsequentFailures"] as ComboBox;
+                    Match actionsMatch = Regex.Match(output, @"FAILURE_ACTIONS\s+:\s+([\s\S]+?)(?=\s*(REBOOT_MESSAGE|COMMAND_LINE|\Z))", RegexOptions.Singleline);
+                    if (actionsMatch.Success)
+                    {
+                        string actionsText = actionsMatch.Groups[1].Value;
+                        string[] actionLines = actionsText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] actionTypes = new string[3];
+                        string restartDelay = "1";
 
-                        if (output.Contains("RESTART"))
+                        int actionIndex = 0;
+                        foreach (string line in actionLines)
                         {
-                            cbbFirstFailure.SelectedItem = "Restart the Service";
-                            cbbSecondFailure.SelectedItem = "Restart the Service";
-                            cbbSubsequentFailures.SelectedItem = "Restart the Service";
+                            if (actionIndex >= 3) break;
+
+                            Match actionMatch = Regex.Match(line, @"(\w+)\s+--\s+Delay = (\d+)\s+milliseconds");
+                            if (actionMatch.Success)
+                            {
+                                string action = actionMatch.Groups[1].Value.ToUpper();
+                                string delay = actionMatch.Groups[2].Value;
+
+                                if (action == "RESTART")
+                                {
+                                    actionTypes[actionIndex] = "Restart the Service";
+                                    restartDelay = (int.Parse(delay) / 1000).ToString();
+                                }
+                                else if (action == "REBOOT")
+                                {
+                                    actionTypes[actionIndex] = "Restart the Computer";
+                                }
+                                else
+                                {
+                                    actionTypes[actionIndex] = "Take No Action";
+                                }
+                                actionIndex++;
+                            }
                         }
-                        else
-                        {
-                            cbbFirstFailure.SelectedItem = "Take No Action";
-                            cbbSecondFailure.SelectedItem = "Take No Action";
-                            cbbSubsequentFailures.SelectedItem = "Take No Action";
-                        }
+
+                        cbbFirstFailure.SelectedItem = actionTypes[0] ?? "Take No Action";
+                        cbbSecondFailure.SelectedItem = actionTypes[1] ?? "Take No Action";
+                        cbbSubsequentFailures.SelectedItem = actionTypes[2] ?? "Take No Action";
+                        txtRestartServiceAfter.Text = restartDelay;
+                    }
+                    else
+                    {
+                        cbbFirstFailure.SelectedItem = "Take No Action";
+                        cbbSecondFailure.SelectedItem = "Take No Action";
+                        cbbSubsequentFailures.SelectedItem = "Take No Action";
+                        txtRestartServiceAfter.Text = "1";
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải properties: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
 
@@ -78,12 +128,11 @@ namespace SERVICES_HELPER
         {
             try
             {
-                // Cập nhật Startup Type
                 ComboBox cbbStartupType = this.Controls.OfType<TabControl>().First().TabPages["generalTab"].Controls["cbbStartupType"] as ComboBox;
                 string selectedStartupType = cbbStartupType.SelectedItem?.ToString();
                 string wmiStartupType = selectedStartupType switch
                 {
-                    "Automatic" => "Auto",
+                    "Automatic" => "Automatic",
                     "Manual" => "Manual",
                     "Disabled" => "Disabled",
                     _ => throw new Exception("Invalid Startup Type")
@@ -91,37 +140,57 @@ namespace SERVICES_HELPER
 
                 using (ManagementObject service = new ManagementObject($"Win32_Service.Name='{_serviceName}'"))
                 {
-                    ManagementBaseObject result = (ManagementBaseObject)service.InvokeMethod("ChangeStartMode", new object[] { wmiStartupType });
-                    if ((uint)result["ReturnValue"] != 0)
+                    uint result = (uint)service.InvokeMethod("ChangeStartMode", new object[] { wmiStartupType });
+                    if (result != 0)
                     {
                         MessageBox.Show($"Lỗi khi thay đổi Startup Type cho {_serviceName}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
 
-                // Cập nhật Recovery settings
                 ComboBox cbbFirstFailure = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbFirstFailure"] as ComboBox;
                 ComboBox cbbSecondFailure = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbSecondFailure"] as ComboBox;
                 ComboBox cbbSubsequentFailures = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["cbbSubsequentFailures"] as ComboBox;
+                TextBox txtResetFailCount = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["txtResetFailCount"] as TextBox;
+                TextBox txtRestartServiceAfter = this.Controls.OfType<TabControl>().First().TabPages["recoveryTab"].Controls["txtRestartServiceAfter"] as TextBox;
+
+                if (!int.TryParse(txtResetFailCount.Text, out int resetPeriod) || resetPeriod < 0)
+                {
+                    MessageBox.Show("Reset fail count after phải là số không âm!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                if (!int.TryParse(txtRestartServiceAfter.Text, out int restartDelay) || restartDelay < 0)
+                {
+                    MessageBox.Show("Restart service after phải là số không âm!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 string failureActions = "";
-                if (cbbFirstFailure.SelectedItem.ToString() == "Restart the Service")
-                    failureActions += " restart/60000";
-                else
-                    failureActions += " none/0";
-                if (cbbSecondFailure.SelectedItem.ToString() == "Restart the Service")
-                    failureActions += " restart/60000";
-                else
-                    failureActions += " none/0";
-                if (cbbSubsequentFailures.SelectedItem.ToString() == "Restart the Service")
-                    failureActions += " restart/60000";
-                else
-                    failureActions += " none/0";
+                failureActions += cbbFirstFailure.SelectedItem.ToString() switch
+                {
+                    "Restart the Service" => $"restart/{restartDelay}",
+                    "Restart the Computer" => "reboot/0",
+                    _ => "none/0"
+                };
+                failureActions += "/";
+                failureActions += cbbSecondFailure.SelectedItem.ToString() switch
+                {
+                    "Restart the Service" => $"restart/{restartDelay}",
+                    "Restart the Computer" => "reboot/0",
+                    _ => "none/0"
+                };
+                failureActions += "/";
+                failureActions += cbbSubsequentFailures.SelectedItem.ToString() switch
+                {
+                    "Restart the Service" => $"restart/{restartDelay}",
+                    "Restart the Computer" => "reboot/0",
+                    _ => "none/0"
+                };
 
                 ProcessStartInfo scFailure = new ProcessStartInfo
                 {
                     FileName = "sc",
-                    Arguments = $"failure \"{_serviceName}\" reset= 86400 actions= {failureActions}",
+                    Arguments = $"failure \"{_serviceName}\" reset= {resetPeriod} actions= {failureActions}",
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
@@ -146,6 +215,17 @@ namespace SERVICES_HELPER
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            this.BtnApply_Click(sender, e);
+            this.Close();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
