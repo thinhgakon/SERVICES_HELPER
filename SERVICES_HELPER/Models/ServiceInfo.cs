@@ -9,6 +9,7 @@ namespace SERVICES_HELPER.Models
     public class ServiceInfo
     {
         public string? Name { get; set; }
+
         public string? Status { get; set; }
     }
 }

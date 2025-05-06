@@ -1,6 +1,7 @@
 ﻿using SERVICES_HELPER.Utils;
 using System.Diagnostics;
 using DotNetEnv;
+using System.ServiceProcess;
 
 namespace SERVICES_HELPER
 {
@@ -16,6 +17,15 @@ namespace SERVICES_HELPER
         {
             this.dgvServices.DataSource = null;
             this.dgvServices.DataSource = Func.GetServices();
+
+            if (dgvServices.Columns["Name"] != null)
+            {
+                dgvServices.Columns["Name"].Width = 300;
+            }
+            if (dgvServices.Columns["Status"] != null)
+            {
+                dgvServices.Columns["Status"].Width = 150;
+            }
         }
 
         private void btnBrowse_Click(object sender, EventArgs e)
@@ -147,7 +157,7 @@ namespace SERVICES_HELPER
                 var slnFiles = Directory.GetFiles(this.txtDirectory.Text, "*.sln", SearchOption.AllDirectories).ToList();
                 if (!slnFiles.Any())
                 {
-                    MessageBox.Show("Không tìm thấy file .sln trong thư mục", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Không tìm thấy file .sln trong thư mục", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -268,11 +278,143 @@ namespace SERVICES_HELPER
                 }
 
                 MessageBox.Show("Build service thành công!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ServicesHelperForm_Load(sender, e);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+        }
+
+        private void menuStart_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.dgvServices.SelectedCells.Count == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn một service!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string serviceName = this.dgvServices.SelectedCells[0].OwningRow.Cells["Name"].Value.ToString();
+                using (ServiceController service = new ServiceController(serviceName))
+                {
+                    if (service.Status == ServiceControllerStatus.Running)
+                    {
+                        MessageBox.Show($"Service {serviceName} đang chạy!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
+                    if (service.Status != ServiceControllerStatus.Stopped)
+                    {
+                        MessageBox.Show($"Service {serviceName} không ở trạng thái có thể khởi động (trạng thái hiện tại: {service.Status})", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    service.Start();
+                    service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
+                    ServicesHelperForm_Load(sender, e);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
+
+        private void menuStop_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.dgvServices.SelectedCells.Count == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn một service!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string serviceName = this.dgvServices.SelectedCells[0].OwningRow.Cells["Name"].Value.ToString();
+                using (ServiceController service = new ServiceController(serviceName))
+                {
+                    if (service.Status == ServiceControllerStatus.Stopped)
+                    {
+                        MessageBox.Show($"Service {serviceName} đã dừng!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
+                    if (!service.CanStop)
+                    {
+                        MessageBox.Show($"Service {serviceName} không thể dừng!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    service.Stop();
+                    service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
+                    ServicesHelperForm_Load(sender, e);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
+
+        private void menuRestart_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.dgvServices.SelectedCells.Count == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn một service!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string serviceName = this.dgvServices.SelectedCells[0].OwningRow.Cells["Name"].Value.ToString();
+                using (ServiceController service = new ServiceController(serviceName))
+                {
+                    if (service.Status == ServiceControllerStatus.Stopped)
+                    {
+                        service.Start();
+                        service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
+                    }
+                    else
+                    {
+                        if (!service.CanStop)
+                        {
+                            MessageBox.Show($"Service {serviceName} không thể dừng để khởi động lại!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        service.Stop();
+                        service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
+                        service.Start();
+                        service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
+                    }
+
+                    ServicesHelperForm_Load(sender, e);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
+
+        private void menuProperties_Click(object sender, EventArgs e)
+        {
+            if (this.dgvServices.SelectedCells.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn một service!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string serviceName = this.dgvServices.SelectedCells[0].OwningRow.Cells["Name"].Value.ToString();
+            using (ServicePropertiesForm propertiesForm = new ServicePropertiesForm(serviceName))
+            {
+                propertiesForm.ShowDialog();
             }
         }
     }

@@ -28,7 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             dgvServices = new DataGridView();
+            contextMenuService = new ContextMenuStrip(components);
+            menuStart = new ToolStripMenuItem();
+            menuStop = new ToolStripMenuItem();
+            menuRestart = new ToolStripMenuItem();
+            menuProperties = new ToolStripMenuItem();
             btnBuildProject = new Button();
             btnAddService = new Button();
             label1 = new Label();
@@ -41,6 +47,7 @@
             btnUpdateGitHub = new Button();
             btnCloneGitHub = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
+            contextMenuService.SuspendLayout();
             SuspendLayout();
             // 
             // dgvServices
@@ -48,11 +55,46 @@
             dgvServices.AllowUserToAddRows = false;
             dgvServices.AllowUserToDeleteRows = false;
             dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvServices.ContextMenuStrip = contextMenuService;
             dgvServices.Location = new Point(20, 14);
             dgvServices.Name = "dgvServices";
             dgvServices.ReadOnly = true;
             dgvServices.Size = new Size(609, 424);
             dgvServices.TabIndex = 0;
+            // 
+            // contextMenuService
+            // 
+            contextMenuService.Items.AddRange(new ToolStripItem[] { menuStart, menuStop, menuRestart, menuProperties });
+            contextMenuService.Name = "contextMenuService";
+            contextMenuService.Size = new Size(181, 114);
+            // 
+            // menuStart
+            // 
+            menuStart.Name = "menuStart";
+            menuStart.Size = new Size(127, 22);
+            menuStart.Text = "Start";
+            menuStart.Click += menuStart_Click;
+            // 
+            // menuStop
+            // 
+            menuStop.Name = "menuStop";
+            menuStop.Size = new Size(127, 22);
+            menuStop.Text = "Stop";
+            menuStop.Click += menuStop_Click;
+            // 
+            // menuRestart
+            // 
+            menuRestart.Name = "menuRestart";
+            menuRestart.Size = new Size(127, 22);
+            menuRestart.Text = "Restart";
+            menuRestart.Click += menuRestart_Click;
+            // 
+            // menuProperties
+            // 
+            menuProperties.Name = "menuProperties";
+            menuProperties.Size = new Size(180, 22);
+            menuProperties.Text = "Properties";
+            menuProperties.Click += menuProperties_Click;
             // 
             // btnBuildProject
             // 
@@ -168,6 +210,7 @@
             Text = "SERVICES HELPER";
             Load += ServicesHelperForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvServices).EndInit();
+            contextMenuService.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -186,5 +229,10 @@
         private Button btnRemoveService;
         private Button btnUpdateGitHub;
         private Button btnCloneGitHub;
+        private ContextMenuStrip contextMenuService;
+        private ToolStripMenuItem menuStart;
+        private ToolStripMenuItem menuStop;
+        private ToolStripMenuItem menuRestart;
+        private ToolStripMenuItem menuProperties;
     }
 }
