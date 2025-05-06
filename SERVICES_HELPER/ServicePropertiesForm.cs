@@ -9,12 +9,15 @@ namespace SERVICES_HELPER
     public partial class ServicePropertiesForm : Form
     {
         private readonly string _serviceName;
+        private readonly ServicesHelperForm _helperForm;
 
-        public ServicePropertiesForm(string serviceName)
+        public ServicePropertiesForm(string serviceName, ServicesHelperForm helperForm)
         {
             _serviceName = serviceName;
+            _helperForm = helperForm;
             InitializeComponent();
             LoadServiceProperties();
+            this.FormClosed += (s, e) => _helperForm.LoadData();
         }
 
         private void LoadServiceProperties()
@@ -207,8 +210,6 @@ namespace SERVICES_HELPER
                         return;
                     }
                 }
-
-                MessageBox.Show($"Cập nhật thành công!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

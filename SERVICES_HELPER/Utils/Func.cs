@@ -18,7 +18,8 @@ namespace SERVICES_HELPER.Utils
                 .Select(s => new ServiceInfo
                 {
                     Name = s.ServiceName,
-                    Status = s.Status.ToString()
+                    Status = s.Status.ToString(),
+                    StartType = s.StartType.ToString()
                 })
                 .ToList();
 

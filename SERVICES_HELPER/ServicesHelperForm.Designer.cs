@@ -198,6 +198,7 @@
             txtSearchKey.Name = "txtSearchKey";
             txtSearchKey.Size = new Size(531, 23);
             txtSearchKey.TabIndex = 12;
+            txtSearchKey.KeyDown += txtSearchKey_KeyDown;
             // 
             // btnSearch
             // 

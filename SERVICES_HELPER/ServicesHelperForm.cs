@@ -16,6 +16,11 @@ namespace SERVICES_HELPER
 
         private void ServicesHelperForm_Load(object sender, EventArgs e)
         {
+            LoadData();
+        }
+
+        public void LoadData()
+        {
             this.dgvServices.DataSource = null;
             this.dgvServices.DataSource = Func.GetServices(this.txtSearchKey.Text);
 
@@ -26,6 +31,10 @@ namespace SERVICES_HELPER
             if (dgvServices.Columns["Status"] != null)
             {
                 dgvServices.Columns["Status"].Width = 150;
+            }
+            if (dgvServices.Columns["StartType"] != null)
+            {
+                dgvServices.Columns["StartType"].Width = 116;
             }
         }
 
@@ -279,7 +288,7 @@ namespace SERVICES_HELPER
                 }
 
                 MessageBox.Show("Build service success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ServicesHelperForm_Load(sender, e);
+                LoadData();
             }
             catch (Exception ex)
             {
@@ -333,7 +342,7 @@ namespace SERVICES_HELPER
                 }
 
                 MessageBox.Show("Remove service success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ServicesHelperForm_Load(sender, e);
+                LoadData();
             }
             catch (Exception ex)
             {
@@ -369,7 +378,7 @@ namespace SERVICES_HELPER
 
                     service.Start();
                     service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
-                    ServicesHelperForm_Load(sender, e);
+                    LoadData();
                 }
             }
             catch (Exception ex)
@@ -406,7 +415,7 @@ namespace SERVICES_HELPER
 
                     service.Stop();
                     service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
-                    ServicesHelperForm_Load(sender, e);
+                    LoadData();
                 }
             }
             catch (Exception ex)
@@ -448,7 +457,7 @@ namespace SERVICES_HELPER
                         service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(30));
                     }
 
-                    ServicesHelperForm_Load(sender, e);
+                    LoadData();
                 }
             }
             catch (Exception ex)
@@ -467,7 +476,7 @@ namespace SERVICES_HELPER
             }
 
             string serviceName = this.dgvServices.SelectedCells[0].OwningRow.Cells["Name"].Value.ToString();
-            using (ServicePropertiesForm propertiesForm = new ServicePropertiesForm(serviceName))
+            using (ServicePropertiesForm propertiesForm = new ServicePropertiesForm(serviceName, this))
             {
                 propertiesForm.ShowDialog();
             }
@@ -475,7 +484,16 @@ namespace SERVICES_HELPER
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            ServicesHelperForm_Load(sender, e);
+            LoadData();
+        }
+
+        private void txtSearchKey_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                LoadData();
+                e.SuppressKeyPress = true;
+            }
         }
     }
 }
