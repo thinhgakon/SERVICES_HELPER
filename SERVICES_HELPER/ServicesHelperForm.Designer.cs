@@ -48,6 +48,7 @@
             btnCloneGitHub = new Button();
             txtSearchKey = new TextBox();
             btnSearch = new Button();
+            taskProgressor = new ProgressBar();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
             contextMenuService.SuspendLayout();
             SuspendLayout();
@@ -132,14 +133,14 @@
             // 
             txtGitHubUrl.Location = new Point(122, 447);
             txtGitHubUrl.Name = "txtGitHubUrl";
-            txtGitHubUrl.Size = new Size(259, 23);
+            txtGitHubUrl.Size = new Size(192, 23);
             txtGitHubUrl.TabIndex = 6;
             // 
             // label2
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label2.Location = new Point(422, 448);
+            label2.Location = new Point(323, 449);
             label2.Name = "label2";
             label2.Size = new Size(79, 20);
             label2.TabIndex = 7;
@@ -147,7 +148,7 @@
             // 
             // btnBrowse
             // 
-            btnBrowse.Location = new Point(740, 446);
+            btnBrowse.Location = new Point(603, 447);
             btnBrowse.Name = "btnBrowse";
             btnBrowse.Size = new Size(38, 25);
             btnBrowse.TabIndex = 8;
@@ -157,9 +158,9 @@
             // 
             // txtDirectory
             // 
-            txtDirectory.Location = new Point(507, 447);
+            txtDirectory.Location = new Point(408, 449);
             txtDirectory.Name = "txtDirectory";
-            txtDirectory.Size = new Size(227, 23);
+            txtDirectory.Size = new Size(192, 23);
             txtDirectory.TabIndex = 9;
             // 
             // btnRemoveService
@@ -210,11 +211,21 @@
             btnSearch.UseVisualStyleBackColor = true;
             btnSearch.Click += btnSearch_Click;
             // 
+            // taskProgressor
+            // 
+            taskProgressor.Location = new Point(660, 447);
+            taskProgressor.Name = "taskProgressor";
+            taskProgressor.Size = new Size(124, 23);
+            taskProgressor.Style = ProgressBarStyle.Marquee;
+            taskProgressor.TabIndex = 14;
+            taskProgressor.Visible = false;
+            // 
             // ServicesHelperForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(796, 477);
+            Controls.Add(taskProgressor);
             Controls.Add(btnSearch);
             Controls.Add(txtSearchKey);
             Controls.Add(btnCloneGitHub);
@@ -261,5 +272,6 @@
         private ToolStripMenuItem menuProperties;
         private TextBox txtSearchKey;
         private Button btnSearch;
+        private ProgressBar taskProgressor;
     }
 }
