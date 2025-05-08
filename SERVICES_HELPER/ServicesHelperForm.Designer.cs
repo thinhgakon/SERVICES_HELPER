@@ -62,7 +62,7 @@
             dgvServices.Location = new Point(20, 45);
             dgvServices.Name = "dgvServices";
             dgvServices.ReadOnly = true;
-            dgvServices.Size = new Size(609, 393);
+            dgvServices.Size = new Size(621, 393);
             dgvServices.TabIndex = 0;
             // 
             // contextMenuService
@@ -101,7 +101,7 @@
             // 
             // btnBuildProject
             // 
-            btnBuildProject.Location = new Point(647, 119);
+            btnBuildProject.Location = new Point(650, 250);
             btnBuildProject.Name = "btnBuildProject";
             btnBuildProject.Size = new Size(131, 33);
             btnBuildProject.TabIndex = 2;
@@ -111,7 +111,7 @@
             // 
             // btnAddService
             // 
-            btnAddService.Location = new Point(647, 173);
+            btnAddService.Location = new Point(650, 45);
             btnAddService.Name = "btnAddService";
             btnAddService.Size = new Size(131, 33);
             btnAddService.TabIndex = 3;
@@ -165,7 +165,7 @@
             // 
             // btnRemoveService
             // 
-            btnRemoveService.Location = new Point(647, 227);
+            btnRemoveService.Location = new Point(650, 95);
             btnRemoveService.Name = "btnRemoveService";
             btnRemoveService.Size = new Size(131, 33);
             btnRemoveService.TabIndex = 10;
@@ -175,7 +175,7 @@
             // 
             // btnUpdateGitHub
             // 
-            btnUpdateGitHub.Location = new Point(647, 66);
+            btnUpdateGitHub.Location = new Point(650, 199);
             btnUpdateGitHub.Name = "btnUpdateGitHub";
             btnUpdateGitHub.Size = new Size(131, 33);
             btnUpdateGitHub.TabIndex = 1;
@@ -185,7 +185,7 @@
             // 
             // btnCloneGitHub
             // 
-            btnCloneGitHub.Location = new Point(647, 14);
+            btnCloneGitHub.Location = new Point(650, 148);
             btnCloneGitHub.Name = "btnCloneGitHub";
             btnCloneGitHub.Size = new Size(131, 33);
             btnCloneGitHub.TabIndex = 11;
@@ -197,13 +197,13 @@
             // 
             txtSearchKey.Location = new Point(20, 12);
             txtSearchKey.Name = "txtSearchKey";
-            txtSearchKey.Size = new Size(531, 23);
+            txtSearchKey.Size = new Size(543, 23);
             txtSearchKey.TabIndex = 12;
             txtSearchKey.KeyDown += txtSearchKey_KeyDown;
             // 
             // btnSearch
             // 
-            btnSearch.Location = new Point(557, 12);
+            btnSearch.Location = new Point(569, 12);
             btnSearch.Name = "btnSearch";
             btnSearch.Size = new Size(72, 23);
             btnSearch.TabIndex = 13;
@@ -213,9 +213,9 @@
             // 
             // taskProgressor
             // 
-            taskProgressor.Location = new Point(660, 447);
+            taskProgressor.Location = new Point(650, 447);
             taskProgressor.Name = "taskProgressor";
-            taskProgressor.Size = new Size(124, 23);
+            taskProgressor.Size = new Size(134, 23);
             taskProgressor.Style = ProgressBarStyle.Marquee;
             taskProgressor.TabIndex = 14;
             taskProgressor.Visible = false;
@@ -224,7 +224,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(796, 477);
+            ClientSize = new Size(791, 477);
             Controls.Add(taskProgressor);
             Controls.Add(btnSearch);
             Controls.Add(txtSearchKey);

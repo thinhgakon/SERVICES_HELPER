@@ -23,6 +23,8 @@ namespace SERVICES_HELPER
         {
             this.dgvServices.DataSource = null;
             this.dgvServices.DataSource = Func.GetServices(this.txtSearchKey.Text);
+            this.txtGitHubUrl.Text = "https://github.com/thinhgakon/TAMDIEP_SERVICES";
+            this.txtDirectory.Text = "D:\\PROD_SERVICE";
 
             if (dgvServices.Columns["Name"] != null)
             {
@@ -34,7 +36,7 @@ namespace SERVICES_HELPER
             }
             if (dgvServices.Columns["StartType"] != null)
             {
-                dgvServices.Columns["StartType"].Width = 116;
+                dgvServices.Columns["StartType"].Width = 128;
             }
         }
 
@@ -296,12 +298,7 @@ namespace SERVICES_HELPER
 
                 await Task.Run(() =>
                 {
-                    var exeFile = string.Empty;
-                    string debugPath = Path.Combine(txtServiceFolder, "bin", "Debug");
-                    if (Directory.Exists(debugPath))
-                    {
-                        exeFile = Directory.GetFiles(debugPath, "*.exe", SearchOption.AllDirectories).FirstOrDefault();
-                    }
+                    var exeFile = Directory.GetFiles(txtServiceFolder, "*.exe", SearchOption.AllDirectories).FirstOrDefault();
                     if (exeFile == null)
                     {
                         MessageBox.Show("Không tìm thấy file .exe!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
