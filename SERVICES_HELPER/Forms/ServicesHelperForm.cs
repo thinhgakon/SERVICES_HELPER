@@ -30,6 +30,7 @@ namespace SERVICES_HELPER
             this.dgvServices.DataSource = Func.GetServices(this.txtSearchKey.Text);
             this.txtGitHubUrl.Text = "https://github.com/thinhgakon/TAMDIEP_SERVICES";
             this.txtDirectory.Text = "D:/PROD_SERVICE";
+            this.txtUserName.Text = this.userName;
             
             this.btnCloneGitHub.Visible = !this.isGuest;
             this.btnUpdateGitHub.Visible = !this.isGuest;
@@ -300,6 +301,15 @@ namespace SERVICES_HELPER
                     {
                         txtServiceFolder = folderDialog.SelectedPath;
                     }
+                    else
+                    {
+                        return;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(txtServiceFolder))
+                {
+                    return;
                 }
 
                 this.taskProgressor.Visible = true;
@@ -307,7 +317,7 @@ namespace SERVICES_HELPER
 
                 await Task.Run(() =>
                 {
-                    var exeFile = Directory.GetFiles(txtServiceFolder, "*.exe", SearchOption.AllDirectories).FirstOrDefault();
+                    var exeFile = Directory.GetFiles(txtServiceFolder, "*.exe", SearchOption.TopDirectoryOnly).FirstOrDefault();
                     if (exeFile == null)
                     {
                         MessageBox.Show("Không tìm thấy file .exe!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

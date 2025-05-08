@@ -49,6 +49,8 @@
             txtSearchKey = new TextBox();
             btnSearch = new Button();
             taskProgressor = new ProgressBar();
+            label3 = new Label();
+            txtUserName = new Label();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
             contextMenuService.SuspendLayout();
             SuspendLayout();
@@ -57,11 +59,14 @@
             // 
             dgvServices.AllowUserToAddRows = false;
             dgvServices.AllowUserToDeleteRows = false;
+            dgvServices.AllowUserToResizeColumns = false;
+            dgvServices.AllowUserToResizeRows = false;
             dgvServices.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvServices.ContextMenuStrip = contextMenuService;
             dgvServices.Location = new Point(20, 45);
             dgvServices.Name = "dgvServices";
             dgvServices.ReadOnly = true;
+            dgvServices.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgvServices.Size = new Size(621, 393);
             dgvServices.TabIndex = 0;
             // 
@@ -220,11 +225,33 @@
             taskProgressor.TabIndex = 14;
             taskProgressor.Visible = false;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label3.Location = new Point(668, 12);
+            label3.Name = "label3";
+            label3.Size = new Size(46, 20);
+            label3.TabIndex = 15;
+            label3.Text = "User:";
+            // 
+            // txtUserName
+            // 
+            txtUserName.AutoSize = true;
+            txtUserName.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            txtUserName.Location = new Point(713, 12);
+            txtUserName.Name = "txtUserName";
+            txtUserName.Size = new Size(51, 20);
+            txtUserName.TabIndex = 16;
+            txtUserName.Text = "label4";
+            // 
             // ServicesHelperForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(791, 477);
+            Controls.Add(txtUserName);
+            Controls.Add(label3);
             Controls.Add(taskProgressor);
             Controls.Add(btnSearch);
             Controls.Add(txtSearchKey);
@@ -273,5 +300,7 @@
         private TextBox txtSearchKey;
         private Button btnSearch;
         private ProgressBar taskProgressor;
+        private Label label3;
+        private Label txtUserName;
     }
 }
