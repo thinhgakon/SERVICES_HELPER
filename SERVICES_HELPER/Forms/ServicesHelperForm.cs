@@ -217,8 +217,10 @@ namespace SERVICES_HELPER
 
                 await Task.Run(() =>
                 {
-                    string nugetPath = @"C:\nuget.exe";
-                    string msBuildPath = @"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe";
+                    var path = AppDomain.CurrentDomain.BaseDirectory;
+
+                    string nugetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utils", "nuget.exe");
+                    string msBuildPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utils", "MSBuild.exe");
 
                     foreach (var slnFile in slnFiles)
                     {
