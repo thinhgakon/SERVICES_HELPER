@@ -10,10 +10,10 @@ namespace SERVICES_HELPER.Utils
 {
     public static class Func
     {
-        public static List<ServiceInfo> GetServices(string searchKey)
+        public static List<ServiceInfo> GetServices(string filter, string searchKey)
         {
             var services = ServiceController.GetServices()
-                .Where(s => s.ServiceName.StartsWith("PROD_") || s.ServiceName.StartsWith("XHTD_"))
+                .Where(s => filter == "ALL" || s.ServiceName.StartsWith(filter))
                 .Where(s => s.ServiceName.ToUpper().Contains(searchKey.ToUpper()))
                 .Select(s => new ServiceInfo
                 {

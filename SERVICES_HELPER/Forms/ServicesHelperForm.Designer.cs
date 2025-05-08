@@ -51,6 +51,7 @@
             taskProgressor = new ProgressBar();
             label3 = new Label();
             txtUserName = new Label();
+            cbbFilter = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
             contextMenuService.SuspendLayout();
             SuspendLayout();
@@ -200,9 +201,9 @@
             // 
             // txtSearchKey
             // 
-            txtSearchKey.Location = new Point(20, 12);
+            txtSearchKey.Location = new Point(101, 12);
             txtSearchKey.Name = "txtSearchKey";
-            txtSearchKey.Size = new Size(543, 23);
+            txtSearchKey.Size = new Size(462, 23);
             txtSearchKey.TabIndex = 12;
             txtSearchKey.KeyDown += txtSearchKey_KeyDown;
             // 
@@ -245,11 +246,22 @@
             txtUserName.TabIndex = 16;
             txtUserName.Text = "label4";
             // 
+            // cbbFilter
+            // 
+            cbbFilter.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbbFilter.FormattingEnabled = true;
+            cbbFilter.Items.AddRange(new object[] { "PROD_", "XHTD_", "ALL" });
+            cbbFilter.Location = new Point(20, 12);
+            cbbFilter.Name = "cbbFilter";
+            cbbFilter.Size = new Size(75, 23);
+            cbbFilter.TabIndex = 17;
+            // 
             // ServicesHelperForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(791, 477);
+            Controls.Add(cbbFilter);
             Controls.Add(txtUserName);
             Controls.Add(label3);
             Controls.Add(taskProgressor);
@@ -302,5 +314,6 @@
         private ProgressBar taskProgressor;
         private Label label3;
         private Label txtUserName;
+        private ComboBox cbbFilter;
     }
 }

@@ -21,13 +21,14 @@ namespace SERVICES_HELPER
 
         private void ServicesHelperForm_Load(object sender, EventArgs e)
         {
+            this.cbbFilter.SelectedIndex = 0;
             LoadData();
         }
 
         public void LoadData()
         {
             this.dgvServices.DataSource = null;
-            this.dgvServices.DataSource = Func.GetServices(this.txtSearchKey.Text);
+            this.dgvServices.DataSource = Func.GetServices(this.cbbFilter.Text, this.txtSearchKey.Text);
             this.txtGitHubUrl.Text = "https://github.com/thinhgakon/TAMDIEP_SERVICES";
             this.txtDirectory.Text = "D:/PROD_SERVICE";
             this.txtUserName.Text = this.userName;
