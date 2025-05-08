@@ -217,10 +217,7 @@ namespace SERVICES_HELPER
 
                 await Task.Run(() =>
                 {
-                    var path = AppDomain.CurrentDomain.BaseDirectory;
-
                     string nugetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utils", "nuget.exe");
-                    string msBuildPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utils", "MSBuild.exe");
 
                     foreach (var slnFile in slnFiles)
                     {
@@ -251,8 +248,9 @@ namespace SERVICES_HELPER
                         // MSBuild
                         ProcessStartInfo buildProject = new ProcessStartInfo
                         {
-                            FileName = msBuildPath,
-                            Arguments = $"\"{slnFile}\"",
+                            FileName = "dotnet",
+                            Arguments = $"build \"{this.txtDirectory.Text}\"",
+                            WorkingDirectory = this.txtDirectory.Text,
                             RedirectStandardOutput = true,
                             RedirectStandardError = true,
                             UseShellExecute = false,
