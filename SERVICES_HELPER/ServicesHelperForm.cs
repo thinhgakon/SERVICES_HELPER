@@ -8,10 +8,15 @@ namespace SERVICES_HELPER
 {
     public partial class ServicesHelperForm : Form
     {
-        public ServicesHelperForm()
+        private bool isGuest = false;
+        private string userName = string.Empty;
+
+        public ServicesHelperForm(string userName, bool isGuest)
         {
             InitializeComponent();
             Env.Load();
+            this.userName = userName;
+            this.isGuest = isGuest;
         }
 
         private void ServicesHelperForm_Load(object sender, EventArgs e)
@@ -24,7 +29,11 @@ namespace SERVICES_HELPER
             this.dgvServices.DataSource = null;
             this.dgvServices.DataSource = Func.GetServices(this.txtSearchKey.Text);
             this.txtGitHubUrl.Text = "https://github.com/thinhgakon/TAMDIEP_SERVICES";
-            this.txtDirectory.Text = "D:\\PROD_SERVICE";
+            this.txtDirectory.Text = "D:/PROD_SERVICE";
+            
+            this.btnCloneGitHub.Visible = !this.isGuest;
+            this.btnUpdateGitHub.Visible = !this.isGuest;
+            this.btnBuildProject.Visible = !this.isGuest;
 
             if (dgvServices.Columns["Name"] != null)
             {
