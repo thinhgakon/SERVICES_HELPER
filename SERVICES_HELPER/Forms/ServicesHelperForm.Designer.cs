@@ -239,7 +239,7 @@
             // 
             txtUserName.AutoSize = true;
             txtUserName.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            txtUserName.Location = new Point(713, 12);
+            txtUserName.Location = new Point(710, 12);
             txtUserName.Name = "txtUserName";
             txtUserName.Size = new Size(51, 20);
             txtUserName.TabIndex = 16;

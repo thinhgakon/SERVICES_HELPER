@@ -19,13 +19,46 @@ namespace SERVICES_HELPER
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(this.txtUsername.Text))
+            {
+                MessageBox.Show("Username không được để trống!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
+            if (string.IsNullOrEmpty(this.txtPassword.Text))
+            {
+                MessageBox.Show("Password không được để trống!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (this.txtUsername.Text == "admin" && this.txtPassword.Text == "admin")
+            {
+                ServicesHelperForm servicesForm = new ServicesHelperForm("Admin", false);
+                servicesForm.FormClosed += (s, args) =>
+                {
+                    this.Show();
+                    this.txtUsername.Text = string.Empty;
+                    this.txtPassword.Text = string.Empty;
+                };
+                servicesForm.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Sai tài khoản hoặc mật khẩu!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
 
         private void btnGuestLogin_Click(object sender, EventArgs e)
         {
             ServicesHelperForm servicesForm = new ServicesHelperForm("Guest", true);
-            servicesForm.FormClosed += (s, args) => this.Show();
+            servicesForm.FormClosed += (s, args) =>
+            {
+                this.Show();
+                this.txtUsername.Text = string.Empty;
+                this.txtPassword.Text = string.Empty;
+            };
             servicesForm.Show();
             this.Hide();
         }
