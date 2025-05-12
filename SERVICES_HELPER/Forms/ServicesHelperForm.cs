@@ -84,7 +84,7 @@ namespace SERVICES_HELPER
                 string repoPath = Path.Combine(this.txtDirectory.Text, repoName);
 
                 string gitHubToken = Env.GetString("GITHUB_TOKEN");
-                string gitHubUrl = this.txtGitHubUrl.Text.Replace("https://", $"https://quyettm134:{gitHubToken}@");
+                string gitHubUrl = this.txtGitHubUrl.Text.Replace("https://", $"https://quyettm134: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@");
 
                 this.taskProgressor.Visible = true;
                 DisableControls();
@@ -106,12 +106,6 @@ namespace SERVICES_HELPER
                         string output = process.StandardOutput.ReadToEnd();
                         string error = process.StandardError.ReadToEnd();
                         process.WaitForExit();
-
-                        if (!string.IsNullOrEmpty(error))
-                        {
-                            MessageBox.Show($"Clone GitHub error: {error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
                     }
 
                     Invoke(() =>
@@ -205,8 +199,8 @@ namespace SERVICES_HELPER
                     return;
                 }
 
-                var slnFiles = Directory.GetFiles(this.txtDirectory.Text, "*.sln", SearchOption.AllDirectories).ToList();
-                if (!slnFiles.Any())
+                var slnFile = Directory.GetFiles(this.txtDirectory.Text, "*.sln", SearchOption.AllDirectories).FirstOrDefault();
+                if (slnFile == null)
                 {
                     MessageBox.Show("Không tìm thấy file .sln trong thư mục", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -217,57 +211,53 @@ namespace SERVICES_HELPER
 
                 await Task.Run(() =>
                 {
+                    // Nuget Restore
                     string nugetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utils", "nuget.exe");
-
-                    foreach (var slnFile in slnFiles)
+                    ProcessStartInfo nugetRestore = new ProcessStartInfo
                     {
-                        // Nuget Restore
-                        ProcessStartInfo nugetRestore = new ProcessStartInfo
-                        {
-                            FileName = nugetPath,
-                            Arguments = $"restore \"{slnFile}\"",
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = true
-                        };
-                        using (Process process = new Process { StartInfo = nugetRestore })
-                        {
-                            process.Start();
-                            string output = process.StandardOutput.ReadToEnd();
-                            string error = process.StandardError.ReadToEnd();
-                            process.WaitForExit();
+                        FileName = nugetPath,
+                        Arguments = $"restore \"{slnFile}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    using (Process process = new Process { StartInfo = nugetRestore })
+                    {
+                        process.Start();
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+                        process.WaitForExit();
 
-                            if (!string.IsNullOrEmpty(error))
-                            {
-                                MessageBox.Show($"Restore NuGet error: {error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
+                        if (!string.IsNullOrEmpty(error))
+                        {
+                            MessageBox.Show($"Restore NuGet error: {error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                         }
+                    }
 
-                        // MSBuild
-                        ProcessStartInfo buildProject = new ProcessStartInfo
-                        {
-                            FileName = "dotnet",
-                            Arguments = $"build \"{this.txtDirectory.Text}\"",
-                            WorkingDirectory = this.txtDirectory.Text,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = true
-                        };
-                        using (Process process = new Process { StartInfo = buildProject })
-                        {
-                            process.Start();
-                            string output = process.StandardOutput.ReadToEnd();
-                            string error = process.StandardError.ReadToEnd();
-                            process.WaitForExit();
+                    // MSBuild
+                    string msBuildPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utils", "Enterprise", "MSBuild", "Current", "Bin", "MSBuild.exe");
+                    ProcessStartInfo buildProject = new ProcessStartInfo
+                    {
+                        FileName = msBuildPath,
+                        Arguments = $"\"{slnFile}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    using (Process process = new Process { StartInfo = buildProject })
+                    {
+                        process.Start();
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+                        process.WaitForExit();
 
-                            if (!string.IsNullOrEmpty(error))
-                            {
-                                MessageBox.Show($"Build error: {error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return;
-                            }
+                        if (!string.IsNullOrEmpty(error))
+                        {
+                            MessageBox.Show($"Build error: {error}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                         }
                     }
 
