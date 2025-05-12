@@ -84,7 +84,7 @@ namespace SERVICES_HELPER
                 string repoPath = Path.Combine(this.txtDirectory.Text, repoName);
 
                 string gitHubToken = Env.GetString("GITHUB_TOKEN");
-                string gitHubUrl = this.txtGitHubUrl.Text.Replace("https://", $"https://quyettm134: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@");
+                string gitHubUrl = this.txtGitHubUrl.Text.Replace("https://", $"https://quyettm134:{gitHubToken}@");
 
                 this.taskProgressor.Visible = true;
                 DisableControls();
