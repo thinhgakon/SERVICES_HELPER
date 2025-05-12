@@ -41,7 +41,7 @@
     <None Include="Resources\mobifone.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Utils\**">
+    <None Include="Utils\nuget.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
