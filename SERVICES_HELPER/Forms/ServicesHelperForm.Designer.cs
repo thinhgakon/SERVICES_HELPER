@@ -52,6 +52,7 @@
             label3 = new Label();
             txtUserName = new Label();
             cbbFilter = new ComboBox();
+            btnRebuildService = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvServices).BeginInit();
             contextMenuService.SuspendLayout();
             SuspendLayout();
@@ -107,7 +108,7 @@
             // 
             // btnBuildProject
             // 
-            btnBuildProject.Location = new Point(650, 250);
+            btnBuildProject.Location = new Point(650, 294);
             btnBuildProject.Name = "btnBuildProject";
             btnBuildProject.Size = new Size(131, 33);
             btnBuildProject.TabIndex = 2;
@@ -171,7 +172,7 @@
             // 
             // btnRemoveService
             // 
-            btnRemoveService.Location = new Point(650, 95);
+            btnRemoveService.Location = new Point(650, 94);
             btnRemoveService.Name = "btnRemoveService";
             btnRemoveService.Size = new Size(131, 33);
             btnRemoveService.TabIndex = 10;
@@ -181,7 +182,7 @@
             // 
             // btnUpdateGitHub
             // 
-            btnUpdateGitHub.Location = new Point(650, 199);
+            btnUpdateGitHub.Location = new Point(650, 243);
             btnUpdateGitHub.Name = "btnUpdateGitHub";
             btnUpdateGitHub.Size = new Size(131, 33);
             btnUpdateGitHub.TabIndex = 1;
@@ -191,7 +192,7 @@
             // 
             // btnCloneGitHub
             // 
-            btnCloneGitHub.Location = new Point(650, 148);
+            btnCloneGitHub.Location = new Point(650, 193);
             btnCloneGitHub.Name = "btnCloneGitHub";
             btnCloneGitHub.Size = new Size(131, 33);
             btnCloneGitHub.TabIndex = 11;
@@ -256,11 +257,22 @@
             cbbFilter.Size = new Size(75, 23);
             cbbFilter.TabIndex = 17;
             // 
+            // btnRebuildService
+            // 
+            btnRebuildService.Location = new Point(650, 143);
+            btnRebuildService.Name = "btnRebuildService";
+            btnRebuildService.Size = new Size(131, 33);
+            btnRebuildService.TabIndex = 18;
+            btnRebuildService.Text = "Rebuild Service";
+            btnRebuildService.UseVisualStyleBackColor = true;
+            btnRebuildService.Click += btnRebuildService_Click;
+            // 
             // ServicesHelperForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(791, 477);
+            Controls.Add(btnRebuildService);
             Controls.Add(cbbFilter);
             Controls.Add(txtUserName);
             Controls.Add(label3);
@@ -315,5 +327,6 @@
         private Label label3;
         private Label txtUserName;
         private ComboBox cbbFilter;
+        private Button btnRebuildService;
     }
 }
