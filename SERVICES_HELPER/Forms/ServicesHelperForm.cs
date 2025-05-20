@@ -32,7 +32,7 @@ namespace SERVICES_HELPER
             this.txtGitHubUrl.Text = "https://github.com/thinhgakon/TAMDIEP_SERVICES";
             this.txtDirectory.Text = "D:/PROD_SERVICE";
             this.txtUserName.Text = this.userName;
-            
+
             this.btnCloneGitHub.Visible = !this.isGuest;
             this.btnUpdateGitHub.Visible = !this.isGuest;
             this.btnBuildProject.Visible = !this.isGuest;
@@ -382,7 +382,7 @@ namespace SERVICES_HELPER
                     }
 
                     string installUtilPath = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe";
-                    ProcessStartInfo installService = new ProcessStartInfo
+                    ProcessStartInfo unInstallService = new ProcessStartInfo
                     {
                         FileName = installUtilPath,
                         Arguments = $"-u \"{exeFile}\"",
@@ -392,7 +392,7 @@ namespace SERVICES_HELPER
                         UseShellExecute = false,
                         CreateNoWindow = true
                     };
-                    using (Process process = new Process { StartInfo = installService })
+                    using (Process process = new Process { StartInfo = unInstallService })
                     {
                         process.Start();
                         string output = process.StandardOutput.ReadToEnd();
@@ -409,6 +409,96 @@ namespace SERVICES_HELPER
                     Invoke(() =>
                     {
                         MessageBox.Show("Remove service success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadData();
+                    });
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            finally
+            {
+                this.taskProgressor.Visible = false;
+                EnableControls();
+            }
+        }
+
+        private async void btnRebuildService_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.dgvServices.SelectedCells.Count == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn một service!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                this.taskProgressor.Visible = true;
+                DisableControls();
+
+                await Task.Run(() =>
+                {
+                    string serviceName = this.dgvServices.SelectedCells[0].OwningRow.Cells["Name"].Value.ToString();
+                    var exeFile = string.Empty;
+                    using (ManagementObject service = new ManagementObject($"Win32_Service.Name='{serviceName}'"))
+                    {
+                        exeFile = service["PathName"]?.ToString() ?? "N/A";
+                    }
+
+                    string installUtilPath = @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe";
+                    ProcessStartInfo unInstallService = new ProcessStartInfo
+                    {
+                        FileName = installUtilPath,
+                        Arguments = $"-u \"{exeFile}\"",
+                        Verb = "runas",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    using (Process process = new Process { StartInfo = unInstallService })
+                    {
+                        process.Start();
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+                        process.WaitForExit();
+
+                        if (!string.IsNullOrEmpty(error))
+                        {
+                            MessageBox.Show($"Remove service error: {error}\nOutput: {output}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+
+                    ProcessStartInfo installService = new ProcessStartInfo
+                    {
+                        FileName = installUtilPath,
+                        Arguments = $"\"{exeFile}\"",
+                        Verb = "runas",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    using (Process process = new Process { StartInfo = installService })
+                    {
+                        process.Start();
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+                        process.WaitForExit();
+
+                        if (!string.IsNullOrEmpty(error))
+                        {
+                            MessageBox.Show($"Install service error: {error}\nOutput: {output}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+
+                    Invoke(() =>
+                    {
+                        MessageBox.Show("Rebuild service success!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LoadData();
                     });
                 });
