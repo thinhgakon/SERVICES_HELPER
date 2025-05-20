@@ -64,6 +64,7 @@
             txtUsername.Name = "txtUsername";
             txtUsername.Size = new Size(182, 23);
             txtUsername.TabIndex = 3;
+            txtUsername.KeyDown += txtUsername_KeyDown;
             // 
             // txtPassword
             // 
@@ -72,6 +73,7 @@
             txtPassword.Size = new Size(182, 23);
             txtPassword.TabIndex = 4;
             txtPassword.UseSystemPasswordChar = true;
+            txtPassword.KeyDown += txtPassword_KeyDown;
             // 
             // label1
             // 
