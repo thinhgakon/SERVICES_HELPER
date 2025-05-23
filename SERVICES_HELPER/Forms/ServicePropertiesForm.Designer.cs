@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServicePropertiesForm));
             tabControl1 = new TabControl();
             generalTab = new TabPage();
             txtExePath = new TextBox();
@@ -332,6 +333,7 @@
             Controls.Add(btnOK);
             Controls.Add(tabControl1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "ServicePropertiesForm";
             StartPosition = FormStartPosition.CenterScreen;

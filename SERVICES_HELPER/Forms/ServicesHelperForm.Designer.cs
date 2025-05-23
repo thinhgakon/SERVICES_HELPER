@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServicesHelperForm));
             dgvServices = new DataGridView();
             contextMenuService = new ContextMenuStrip(components);
             menuStart = new ToolStripMenuItem();
@@ -291,6 +292,7 @@
             Controls.Add(btnUpdateGitHub);
             Controls.Add(dgvServices);
             FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "ServicesHelperForm";
             StartPosition = FormStartPosition.CenterScreen;
