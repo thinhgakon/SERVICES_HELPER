@@ -8,6 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+    <AssemblyName>Services Helper</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
